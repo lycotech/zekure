@@ -1,0 +1,349 @@
+@import "tailwindcss";
+
+:root {
+  --black: #000000;
+  --cyan: #29cbef;
+  --cyan-tint: #e9fcff;
+  --ink: #101323;
+  --on-cyan: #0b1702;
+  --muted: #667085;
+  --card-dark: #262626;
+  --link-blue: #0b48b0;
+  --green: #00c559;
+  --orange: #fb5a30;
+  --yellow: #f9cd2e;
+  --violet: #8b5cf6;
+  --white: #ffffff;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@theme inline {
+  --color-black: var(--black);
+  --color-cyan: var(--cyan);
+  --color-cyan-tint: var(--cyan-tint);
+  --color-ink: var(--ink);
+  --color-on-cyan: var(--on-cyan);
+  --color-muted: var(--muted);
+  --color-card-dark: var(--card-dark);
+  --color-link-blue: var(--link-blue);
+  --color-green: var(--green);
+  --color-orange: var(--orange);
+  --color-yellow: var(--yellow);
+  --color-violet: var(--violet);
+  --font-sans: var(--font-body), system-ui, sans-serif;
+  --font-display: var(--font-display), system-ui, sans-serif;
+  --font-serif: var(--font-serif), Georgia, serif;
+  --radius-pill: 32px;
+  --radius-card: 24px;
+  --radius-panel: 32px;
+  --text-hero: clamp(2.75rem, 2rem + 3.75vw, 4.5rem);
+  --text-section: clamp(2rem, 1.5rem + 2.5vw, 3.25rem);
+}
+
+html {
+  scroll-behavior: auto;
+}
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  -webkit-font-smoothing: antialiased;
+}
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+.on-light :focus-visible {
+  outline-color: var(--link-blue);
+}
+
+/* Italic emphasis words: cyan on black, link-blue on light (cyan fails contrast on white) */
+.em {
+  font-family: var(--font-serif), Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--cyan);
+}
+.on-light .em {
+  color: var(--link-blue);
+}
+
+/* Scroll reveal: text stays in server HTML; hidden only once JS marks <html class="js"> */
+.js [data-reveal]:not(.in) {
+  opacity: 0;
+  transform: translateY(24px);
+}
+[data-reveal] {
+  transition:
+    opacity 0.6s var(--ease),
+    transform 0.6s var(--ease);
+  transition-delay: var(--d, 0ms);
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(-4px);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes twinkle {
+  0%,
+  100% {
+    transform: scale(1) rotate(0);
+  }
+  50% {
+    transform: scale(1.15) rotate(12deg);
+  }
+}
+.anim-spin {
+  animation: spin-slow 20s linear infinite;
+}
+.anim-drift {
+  animation: drift 5s ease-in-out infinite;
+}
+.anim-twinkle {
+  animation: twinkle 3s ease-in-out infinite;
+}
+.marquee-track {
+  animation: marquee 30s linear infinite;
+}
+.marquee:hover .marquee-track,
+.marquee[data-paused="true"] .marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-spin,
+  .anim-drift,
+  .anim-twinkle,
+  .marquee-track {
+    animation: none !important;
+  }
+  [data-reveal] {
+    transition: opacity 0.15s linear !important;
+  }
+  .js [data-reveal]:not(.in) {
+    transform: none;
+  }
+}
+
+@keyframes acc-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+@keyframes acc-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-state] {
+    animation-duration: 0.01ms !important;
+  }
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes menu-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+@keyframes page-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.page-fade {
+  animation: page-in 200ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-fade {
+    animation: none;
+  }
+}
+
+/* ---------- Hero entrance (CSS-only; text is always in server HTML) ---------- */
+/* Words start at 25% opacity, not 0, so the headline is painted (and counted as the largest
+   paint) from the very first frame instead of waiting for the stagger. */
+@keyframes word-in {
+  from {
+    opacity: 0.25;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes sweep {
+  to {
+    background-size: 100% 3px;
+  }
+}
+@keyframes photo-in {
+  from {
+    clip-path: inset(12% 12% 12% 12% round 48px);
+    transform: scale(1.05);
+  }
+  to {
+    clip-path: inset(0 round 24px);
+    transform: scale(1);
+  }
+}
+@keyframes btn-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.hero .word {
+  display: inline-block;
+  animation: word-in 0.6s var(--ease) both;
+  animation-delay: calc(var(--i) * 60ms);
+}
+.hero .sweep {
+  background: linear-gradient(var(--cyan), var(--cyan)) no-repeat left bottom / 0 3px;
+  animation: sweep 0.6s var(--ease) 0.6s forwards;
+}
+.hero .photo-reveal {
+  animation: photo-in 0.8s var(--ease) both;
+}
+.hero .hero-btn {
+  animation: btn-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.9s both;
+}
+.hero[data-motion-paused="true"] .anim-spin,
+.hero[data-motion-paused="true"] .anim-drift,
+.hero[data-motion-paused="true"] .anim-twinkle {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero .word,
+  .hero .photo-reveal,
+  .hero .hero-btn {
+    animation: none;
+  }
+  .hero .sweep {
+    animation: none;
+    background-size: 100% 3px;
+  }
+}
+
+/* Feature icons pop in as their card is revealed */
+.js [data-reveal]:not(.in) .feature-icon {
+  transform: scale(0.6);
+}
+.feature-icon {
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .feature-icon {
+    transition: none;
+  }
+}
+
+/* ---------- Product showcase ---------- */
+/* Floating UI cards slide in from the side with a slight rotation when their row is revealed. */
+.slide-card {
+  transition:
+    transform 0.7s var(--ease) 0.2s,
+    opacity 0.7s var(--ease) 0.2s;
+}
+.js [data-reveal]:not(.in) .slide-card {
+  transform: translateX(32px) rotate(3deg);
+  opacity: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .slide-card {
+    transition: none;
+  }
+  .js [data-reveal]:not(.in) .slide-card {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* Desktop pinned mode (class added by PinnedShowcase): rows stack and cross-fade. */
+.stage.is-pinned {
+  position: relative;
+  height: clamp(480px, calc(100vh - 380px), 640px);
+}
+.stage.is-pinned > .row {
+  position: absolute;
+  inset: 0;
+}
+.is-pinned [data-reveal],
+.is-pinned .slide-card {
+  opacity: 1;
+  transition: none;
+}
+.is-pinned [data-reveal] {
+  transform: none !important;
+}
+
+/* Waitlist success confetti (CSS only, 1.2 s, once) */
+@keyframes confetti {
+  from {
+    transform: translate(0, 0) scale(0.4) rotate(0);
+    opacity: 1;
+  }
+  to {
+    transform: translate(var(--dx), var(--dy)) scale(1) rotate(120deg);
+    opacity: 0;
+  }
+}
+.confetti {
+  animation: confetti 1.2s var(--ease) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .confetti-wrap {
+    display: none;
+  }
+}
+
+/* Skip rendering work for below-the-fold sections until they are near the viewport. */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 700px;
+}
