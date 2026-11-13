@@ -38,7 +38,7 @@ test("providers page renders all five partners from config", async ({ page, isMo
     "First Option Microfinance Bank Limited",
     "Invest-Trust Asset Management Limited",
     "Licensed stockbroking partner",
-    "Core Capital Limited (proposed Zekured Capital)",
+    "Zekured Capital",
     "Great Hope Insurance Brokers Limited",
   ]) {
     await expect(page.getByText(n, { exact: true }).locator("visible=true").first()).toBeVisible();

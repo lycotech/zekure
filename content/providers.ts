@@ -52,10 +52,10 @@ export const providers: Provider[] = [
   {
     id: "lending",
     role: "Lending",
-    partner: "Core Capital Limited (proposed Zekured Capital)",
+    partner: "Zekured Capital",
     regulator: "CBN",
     status: "proposed",
-    proposedText: "Authority, ownership and the proposed name change to be confirmed.",
+    proposedText: "Authority and ownership to be confirmed.",
   },
   {
     id: "insurance",
